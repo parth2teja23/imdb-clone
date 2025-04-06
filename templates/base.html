@@ -1,75 +1,123 @@
-{% load static %}
-{% load tailwind_tags %}
+{% load static %} {% load tailwind_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% tailwind_css %}
-  <title>{% block title %}IMDB Clone{% endblock %}</title>
-</head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col">
-
-  <!-- Header -->
-  <header class="bg-gray-800 shadow-lg">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>
-          <h1 class="text-2xl font-bold">MovieDB</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% tailwind_css %}
+    <title>{% block title %}IMDB Clone{% endblock %}</title>
+  </head>
+  <body class="bg-black text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-neutral-800 shadow-lg">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-8 h-8 text-yellow-400"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 4h16v16H4z" />
+            </svg>
+            <h1 class="text-2xl font-bold">MovieDB</h1>
+          </div>
+          <div class="relative flex-1 max-w-xl mx-8">
+            <input
+              type="text"
+              placeholder="Search movies..."
+              class="w-full bg-gray-700 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            <svg
+              class="absolute left-3 top-2.5 text-gray-400 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+          </div>
+          <nav class="hidden md:flex space-x-6">
+            <a
+              href="#"
+              class="flex items-center space-x-1 hover:text-yellow-400"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 17l6-6 4 4 8-8" />
+              </svg>
+              <span>Top Rated</span>
+            </a>
+            {% if user.is_authenticated %}
+            <span>Welcome, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="hover:text-yellow-400 ml-4"
+              >Logout</a
+            >
+            {% else %}
+            <a href="{% url 'login' %}" class="hover:text-yellow-400 ml-4"
+              >Login</a
+            >
+            <a href="{% url 'signup' %}" class="hover:text-yellow-400 ml-4"
+              >Sign Up</a
+            >
+            {% endif %}
+            <a
+              href="#"
+              class="flex items-center space-x-1 hover:text-yellow-400"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 8v4l3 3" />
+              </svg>
+              <span>New Releases</span>
+            </a>
+          </nav>
         </div>
-        <div class="relative flex-1 max-w-xl mx-8">
-          <input
-            type="text"
-            placeholder="Search movies..."
-            class="w-full bg-gray-700 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          <svg class="absolute left-3 top-2.5 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
-        </div>
-        <nav class="hidden md:flex space-x-6">
-          <a href="#" class="flex items-center space-x-1 hover:text-yellow-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
-            <span>Top Rated</span>
-          </a>
-          {% if user.is_authenticated %}
-  <span>Welcome, {{ user.username }}</span>
-  <a href="{% url 'logout' %}" class="hover:text-yellow-400 ml-4">Logout</a>
-{% else %}
-  <a href="{% url 'login' %}" class="hover:text-yellow-400 ml-4">Login</a>
-  <a href="{% url 'signup' %}" class="hover:text-yellow-400 ml-4">Sign Up</a>
-{% endif %}
-          <a href="#" class="flex items-center space-x-1 hover:text-yellow-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/></svg>
-            <span>New Releases</span>
-          </a>
-        </nav>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Content -->
-  <main class="flex-grow container mx-auto px-4 py-8">
-    {% block content %}
-    {% endblock %}
-  </main>
+    <!-- Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+      {% block content %} {% endblock %}
+    </main>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 mt-12">
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center space-x-2 mb-4 md:mb-0">
-          <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>
-          <span class="font-semibold">MovieDB</span>
-        </div>
-        <div class="flex space-x-6">
-          <a href="#" class="hover:text-yellow-400">About</a>
-          <a href="#" class="hover:text-yellow-400">Contact</a>
-          <a href="#" class="hover:text-yellow-400">Privacy Policy</a>
+    <!-- Footer -->
+    <footer class="bg-neutral-800 mt-12">
+      <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center space-x-2 mb-4 md:mb-0">
+            <svg
+              class="w-6 h-6 text-yellow-400"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 4h16v16H4z" />
+            </svg>
+            <span class="font-semibold">MovieDB</span>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="hover:text-yellow-400">About</a>
+            <a href="#" class="hover:text-yellow-400">Contact</a>
+            <a href="#" class="hover:text-yellow-400">Privacy Policy</a>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
-
-</body>
+    </footer>
+  </body>
 </html>
