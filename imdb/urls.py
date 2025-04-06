@@ -24,7 +24,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     
     path('admin/', admin.site.urls),
-    path('chai/', include('movierating.urls')),
+    path('movierating/', include('movierating.urls')),
     
     path("__reload__/", include("django_browser_reload.urls")),
 
