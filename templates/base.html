@@ -32,6 +32,13 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
             <span>Top Rated</span>
           </a>
+          {% if user.is_authenticated %}
+  <span>Welcome, {{ user.username }}</span>
+  <a href="{% url 'logout' %}" class="hover:text-yellow-400 ml-4">Logout</a>
+{% else %}
+  <a href="{% url 'login' %}" class="hover:text-yellow-400 ml-4">Login</a>
+  <a href="{% url 'signup' %}" class="hover:text-yellow-400 ml-4">Sign Up</a>
+{% endif %}
           <a href="#" class="flex items-center space-x-1 hover:text-yellow-400">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/></svg>
             <span>New Releases</span>
