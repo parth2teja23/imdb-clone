@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Rate {{ movie.title }}{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Rate "{{ movie.title }}"</h2>
+
+<form method="POST" class="space-y-4 max-w-md">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="bg-yellow-400 text-black px-4 py-2 rounded">Submit Rating</button>
+</form>
+{% endblock %}

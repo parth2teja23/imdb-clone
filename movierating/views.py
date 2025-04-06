@@ -1,37 +1,23 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.db.models import Avg, Count
+
 from django.contrib import messages
+from .models import Rating
+from .models import Movie, Rating
 
 # Create your views here.
+from django.shortcuts import render
+from .models import Movie
+
 def home(request):
-    movies = [
-        {
-            "id": 1,
-            "title": "Inception",
-            "rating": 8.8,
-            "year": 2010,
-            "image": "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&q=80&w=600",
-            "description": "A thief who steals corporate secrets..."
-        },
-        {
-            "id": 2,
-            "title": "The Dark Knight",
-            "rating": 9.0,
-            "year": 2008,
-            "image": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&q=80&w=600",
-            "description": "When the menace known as the Joker..."
-        },
-        {
-            "id": 3,
-            "title": "Interstellar",
-            "rating": 8.6,
-            "year": 2014,
-            "image": "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&q=80&w=600",
-            "description": "A team of explorers travel through a wormhole..."
-        },
-    ]
+    movies = Movie.objects.annotate(
+        average_rating=Avg('ratings__rating'),
+        rating_count=Count('ratings')
+    )
     return render(request, 'home.html', {'movies': movies})
+
 
 
 
@@ -64,3 +50,26 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+
+from django.shortcuts import get_object_or_404
+from .models import Movie
+from .forms import RatingForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def rate_movie(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    form = RatingForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        rating_obj, created = Rating.objects.update_or_create(
+            user=request.user,
+            movie=movie,
+            defaults={'rating': form.cleaned_data['rating']}
+        )
+        return redirect('home')  # or 'movie_detail' if you have that
+
+    return render(request, "rate_movie.html", {
+        "movie": movie,
+        "form": form,
+    })
