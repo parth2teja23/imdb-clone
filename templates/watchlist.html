@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container mx-auto px-4 py-8">
+  <h2 class="text-2xl font-semibold mb-6">My Watchlist</h2>
+  {% if movies %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for movie in movies %}
+        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+          <img src="{{ movie.image }}" alt="{{ movie.title }}" class="w-full h-64 object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-white">{{ movie.title }}</h3>
+            <p class="text-gray-400 text-sm mb-2">{{ movie.year }}</p>
+            <p class="text-gray-300 mb-4">{{ movie.description|truncatewords:20 }}</p>
+            <form method="POST" action="{% url 'toggle_watchlist' movie.id %}">
+              {% csrf_token %}
+              <button type="submit" class="text-red-400 hover:underline">Remove from Watchlist</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400">Your watchlist is empty.</p>
+  {% endif %}
+</main>
+{% endblock %}

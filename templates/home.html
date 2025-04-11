@@ -29,13 +29,30 @@
           </div>
           <p class="text-gray-400 text-sm mb-4">{{ movie.year }}</p>
           <p class="text-gray-300 line-clamp-3">{{ movie.description }}</p>
+          
           <a href="{% url 'rate_movie' movie.id %}" class="mt-4 block text-yellow-400 hover:underline">
             Rate this movie
           </a>
+
+          {% if user.is_authenticated %}
+          <form method="POST" action="{% url 'toggle_watchlist' movie.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="text-sm text-blue-400 hover:underline">
+              {% if user in movie.watchlisted_by.all %}
+                Remove from Watchlist
+              {% else %}
+                Add to Watchlist
+              {% endif %}
+            </button>
+          </form>
+          {% else %}
+          <p class="text-sm mt-2 text-gray-400">
+            <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Login to add to Watchlist</a>
+          </p>
+          {% endif %}
         </div>
       </div>
     {% endfor %}
   </div>
 </main>
 {% endblock %}
-

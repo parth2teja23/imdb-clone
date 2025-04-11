@@ -83,7 +83,9 @@
               >
                 <path d="M12 8v4l3 3" />
               </svg>
-              <span>New Releases</span>
+              {% comment %} <span>New Releases</span> {% endcomment %}
+              <a href="{% url 'user_watchlist' %}" class="hover:text-yellow-400">My Watchlist</a>
+
             </a>
           </nav>
         </div>

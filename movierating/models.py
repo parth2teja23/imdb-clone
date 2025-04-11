@@ -6,7 +6,8 @@ class Movie(models.Model):
     description = models.TextField()
     year = models.PositiveIntegerField()
     image = models.URLField()
-    
+    watchlisted_by = models.ManyToManyField(User, related_name="watchlisted_movies", blank=True)
+
     def __str__(self):
         return self.title
 
@@ -35,14 +36,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} on {self.movie.title}"
-
-class Watchlist(models.Model):
-    user = models.ForeignKey(User, related_name='watchlist', on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, related_name='watchlisted_by', on_delete=models.CASCADE)
-    added_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'movie')  # No duplicates
-
-    def __str__(self):
-        return f"{self.user.username} - {self.movie.title}"

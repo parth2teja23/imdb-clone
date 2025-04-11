@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count
 
-from django.contrib import messages
-from .models import Rating
 from .models import Movie, Rating
+from .forms import RatingForm
 
-# Create your views here.
-from django.shortcuts import render
-from .models import Movie
 
+# --------------------
+# Home Page View
+# --------------------
 def home(request):
     movies = Movie.objects.annotate(
         average_rating=Avg('ratings__rating'),
@@ -19,19 +20,20 @@ def home(request):
     return render(request, 'home.html', {'movies': movies})
 
 
-
-
-
+# --------------------
+# Auth Views
+# --------------------
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # change this to your homepage url name
+            return redirect('home')
     else:
         form = UserCreationForm()
     return render(request, 'auth/signup.html', {'form': form})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -46,30 +48,54 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'auth/login.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('home')
 
 
-from django.shortcuts import get_object_or_404
-from .models import Movie
-from .forms import RatingForm
-from django.contrib.auth.decorators import login_required
-
+# --------------------
+# Rating a Movie
+# --------------------
 @login_required
 def rate_movie(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
     form = RatingForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        rating_obj, created = Rating.objects.update_or_create(
+        Rating.objects.update_or_create(
             user=request.user,
             movie=movie,
             defaults={'rating': form.cleaned_data['rating']}
         )
-        return redirect('home')  # or 'movie_detail' if you have that
+        return redirect('home')
 
     return render(request, "rate_movie.html", {
         "movie": movie,
         "form": form,
     })
+
+
+# --------------------
+# Toggle Watchlist
+# --------------------
+@login_required
+def toggle_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    user = request.user
+
+    if movie.watchlisted_by.filter(id=user.id).exists():
+        movie.watchlisted_by.remove(user)
+    else:
+        movie.watchlisted_by.add(user)
+
+    return redirect('home')
+
+
+# --------------------
+# Watchlist View
+# --------------------
+@login_required
+def watchlist_view(request):
+    movies = request.user.watchlisted_movies.all()
+    return render(request, 'watchlist.html', {'movies': movies})
