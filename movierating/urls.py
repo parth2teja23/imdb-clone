@@ -14,4 +14,6 @@ urlpatterns = [
 
     # ✅ Watchlist page
     path('watchlist/', views.watchlist_view, name='user_watchlist'),  # This is the important one!
+    path('movie/<int:movie_id>/', views.movie_detail, name='movie_detail'),
+
 ]

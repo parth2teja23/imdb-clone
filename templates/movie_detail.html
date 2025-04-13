@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container mx-auto px-4 py-8">
+  <div class="flex flex-col md:flex-row gap-8">
+    <img src="{{ movie.image }}" alt="{{ movie.title }}" class="w-full md:w-1/3 rounded shadow-lg" />
+    <div class="flex-1">
+      <h2 class="text-3xl font-bold text-white mb-2">{{ movie.title }} ({{ movie.year }})</h2>
+      <p class="text-gray-400 mb-4">{{ movie.description }}</p>
+      <p class="text-yellow-400 text-sm">Average Rating: {{ movie.average_rating }}</p>
+
+      {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'toggle_watchlist' movie.id %}">
+          {% csrf_token %}
+          <button type="submit" class="text-blue-400 mt-4 hover:underline">
+            {% if user in movie.watchlisted_by.all %}
+              Remove from Watchlist
+            {% else %}
+              Add to Watchlist
+            {% endif %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <section class="mt-10">
+    <h3 class="text-2xl font-semibold text-white mb-4">Comments</h3>
+    {% for comment in comments %}
+      <div class="mb-4 p-4 bg-neutral-800 rounded shadow">
+        <p class="text-white font-semibold">{{ comment.user.username }}</p>
+        <p class="text-gray-300">{{ comment.text }}</p>
+        <p class="text-gray-500 text-sm">{{ comment.timestamp }}</p>
+      </div>
+    {% empty %}
+      <p class="text-gray-400">No comments yet.</p>
+    {% endfor %}
+    {% if user.is_authenticated %}
+  <form method="POST" class="mt-6">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+      Post Comment
+    </button>
+  </form>
+{% else %}
+  <p class="text-gray-400 mt-6">Please <a href="{% url 'login' %}" class="text-blue-400 hover:underline">login</a> to post a comment.</p>
+{% endif %}
+
+  </section>
+  
+</main>
+{% endblock %}

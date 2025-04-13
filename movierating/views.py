@@ -99,3 +99,26 @@ def toggle_watchlist(request, movie_id):
 def watchlist_view(request):
     movies = request.user.watchlisted_movies.all()
     return render(request, 'watchlist.html', {'movies': movies})
+
+
+from .models import Movie
+from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
+
+def movie_detail(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    comments = movie.comments.order_by('-timestamp')
+
+    form = CommentForm(request.POST or None)
+    if request.method == 'POST' and request.user.is_authenticated and form.is_valid():
+        new_comment = form.save(commit=False)
+        new_comment.movie = movie
+        new_comment.user = request.user
+        new_comment.save()
+        return redirect('movie_detail', movie_id=movie.id)
+
+    return render(request, 'movie_detail.html', {
+        'movie': movie,
+        'comments': comments,
+        'form': form
+    })

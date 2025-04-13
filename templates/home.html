@@ -9,48 +9,39 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {% for movie in movies %}
       <div class="bg-neutral-800 rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-        <img src="{{ movie.image }}" alt="{{ movie.title }}" class="w-full h-64 object-cover" />
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-xl font-semibold">{{ movie.title }}</h3>
-            <div class="flex items-center space-x-1">
-              <svg class="w-5 h-5 text-yellow-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 .587l3.668 7.431L24 9.748l-6 5.847L19.335 24 12 20.202 4.665 24 6 15.595 0 9.748l8.332-1.73z"/>
-              </svg>
-              <span>
-                {% if movie.average_rating %}
-                  {{ movie.average_rating|floatformat:1 }}
-                {% else %}
-                  N/A
-                {% endif %}
-                ({{ movie.rating_count }})
-              </span>
+        <a href="{% url 'movie_detail' movie.id %}">
+          <img src="{{ movie.image }}" alt="{{ movie.title }}" class="w-full h-64 object-cover" />
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xl font-semibold">{{ movie.title }}</h3>
+              <div class="flex items-center space-x-1">
+                <svg class="w-5 h-5 text-yellow-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M12 .587l3.668 7.431L24 9.748l-6 5.847L19.335 24 12 20.202 4.665 24 6 15.595 0 9.748l8.332-1.73z"/>
+                </svg>
+                <span>
+                  {% if movie.average_rating %}
+                    {{ movie.average_rating|floatformat:1 }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                  ({{ movie.rating_count }})
+                </span>
+              </div>
             </div>
+            <p class="text-gray-400 text-sm mb-4">{{ movie.year }}</p>
+            <p class="text-gray-300 line-clamp-3">{{ movie.description }}</p>
           </div>
-          <p class="text-gray-400 text-sm mb-4">{{ movie.year }}</p>
-          <p class="text-gray-300 line-clamp-3">{{ movie.description }}</p>
-          
-          <a href="{% url 'rate_movie' movie.id %}" class="mt-4 block text-yellow-400 hover:underline">
-            Rate this movie
-          </a>
-
-          {% if user.is_authenticated %}
-          <form method="POST" action="{% url 'toggle_watchlist' movie.id %}" class="mt-2">
-            {% csrf_token %}
-            <button type="submit" class="text-sm text-blue-400 hover:underline">
-              {% if user in movie.watchlisted_by.all %}
-                Remove from Watchlist
-              {% else %}
-                Add to Watchlist
-              {% endif %}
-            </button>
-          </form>
-          {% else %}
-          <p class="text-sm mt-2 text-gray-400">
-            <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Login to add to Watchlist</a>
-          </p>
-          {% endif %}
-        </div>
+        </a>
+        <form method="POST" action="{% url 'toggle_watchlist' movie.id %}" class="p-4 pt-0">
+          {% csrf_token %}
+          <button type="submit" class="text-sm text-blue-400 hover:underline mt-2">
+            {% if user.is_authenticated and user in movie.watchlisted_by.all %}
+              Remove from Watchlist
+            {% else %}
+              Add to Watchlist
+            {% endif %}
+          </button>
+        </form>
       </div>
     {% endfor %}
   </div>

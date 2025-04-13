@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% tailwind_css %}
     <title>{% block title %}IMDB Clone{% endblock %}</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
   </head>
   <body class="bg-black text-white min-h-screen flex flex-col">
     <!-- Header -->
@@ -67,7 +69,9 @@
               >Login</a
             >
             <a href="{% url 'signup' %}" class="hover:text-yellow-400 ml-4"
-              >Sign Up</a
+              >
+              Sign Up
+              </a
             >
             {% endif %}
             <a
@@ -83,7 +87,7 @@
               >
                 <path d="M12 8v4l3 3" />
               </svg>
-              {% comment %} <span>New Releases</span> {% endcomment %}
+              <span>New Releases</span>
               <a href="{% url 'user_watchlist' %}" class="hover:text-yellow-400">My Watchlist</a>
 
             </a>
