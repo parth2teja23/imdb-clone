@@ -12,12 +12,31 @@ from .forms import RatingForm
 # --------------------
 # Home Page View
 # --------------------
+from django.db.models import Avg, Count, Q
+from .models import Movie
+
+from django.db.models import Avg, Count, Q
+
 def home(request):
     movies = Movie.objects.annotate(
         average_rating=Avg('ratings__rating'),
         rating_count=Count('ratings')
     )
+
+    query = request.GET.get('q')
+    if query:
+        movies = movies.filter(Q(title__icontains=query))
+
+    sort = request.GET.get('sort')
+    if sort == 'top':
+        movies = movies.order_by('-average_rating')
+    elif sort == 'new':
+        movies = movies.order_by('-year')  # ✅ Sort by year here
+
     return render(request, 'home.html', {'movies': movies})
+
+
+
 
 
 # --------------------

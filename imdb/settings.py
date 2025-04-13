@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'movierating',
     'theme',
     'django_browser_reload',
+    'widget_tweaks',
 
 ]
 

@@ -7,6 +7,8 @@ class Movie(models.Model):
     year = models.PositiveIntegerField()
     image = models.URLField()
     watchlisted_by = models.ManyToManyField(User, related_name="watchlisted_movies", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return self.title
