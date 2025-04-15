@@ -5,9 +5,8 @@
 cd imdb 
 python manage.py runserver
 ```
-3. To run TailwindCSS, add another tyerminal and run follwing:
+3. To run TailwindCSS, add another terminal and run follwing:
 ```
-cd imdb # ignore if alrealy in imdb
 python manage.py tailwind start
 ```
 
