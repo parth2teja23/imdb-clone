@@ -9,3 +9,5 @@ def about(request):
 
 def contact(request):
     return HttpResponse("<h1>Welcome to Chai's Django Project: Contact page</h1>")
+
+

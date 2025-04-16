@@ -107,6 +107,29 @@
     <!-- Content -->
     <main class="flex-grow container mx-auto px-4 py-8">
       {% block content %} {% endblock %}
+      <div x-data="{ showTrailer: false, selectedTrailer: '' }">
+        <!-- Modal Overlay -->
+        <div 
+          x-show="showTrailer"
+          class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          x-transition
+        >
+          <div class="bg-neutral-900 rounded-lg overflow-hidden shadow-xl w-full max-w-3xl relative">
+            <button 
+              @click="showTrailer = false"
+              class="absolute top-2 right-2 text-white text-2xl font-bold"
+            >&times;</button>
+            
+            <iframe 
+              :src="selectedTrailer"
+              class="w-full h-[500px]"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </div>
+      
     </main>
 
     <!-- Footer -->
@@ -125,13 +148,14 @@
             </svg>
             <span class="font-semibold">MovieDB</span>
           </div>
-          <div class="flex space-x-6">
-            <a href="#" class="hover:text-yellow-400">About</a>
-            <a href="#" class="hover:text-yellow-400">Contact</a>
-            <a href="#" class="hover:text-yellow-400">Privacy Policy</a>
+          <div class="flex space-x-6 text-sm">
+            <a href="{% url 'about' %}" class="hover:text-yellow-400">About</a>
+            <a href="{% url 'contact' %}" class="hover:text-yellow-400">Contact Us</a>
+            <a href="{% url 'privacy' %}" class="hover:text-yellow-400">Privacy Policy</a>
           </div>
         </div>
       </div>
+
     </footer>
   </body>
 </html>

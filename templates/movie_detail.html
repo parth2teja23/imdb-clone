@@ -11,7 +11,7 @@
       {% if user.is_authenticated %}
         <form method="POST" action="{% url 'toggle_watchlist' movie.id %}">
           {% csrf_token %}
-          <button type="submit" class="text-blue-400 mt-4 hover:underline">
+          <button type="submit" class="text-yellow-400 mt-4 hover:underline">
             {% if user in movie.watchlisted_by.all %}
               Remove from Watchlist
             {% else %}
@@ -19,6 +19,11 @@
             {% endif %}
           </button>
         </form>
+
+        <!-- Rate Movie Button -->
+        <a href="{% url 'rate_movie' movie.id %}" class="inline-block mt-4 ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-400">
+          Rate this Movie
+        </a>
       {% endif %}
     </div>
   </div>
@@ -34,19 +39,18 @@
     {% empty %}
       <p class="text-gray-400">No comments yet.</p>
     {% endfor %}
-    {% if user.is_authenticated %}
-  <form method="POST" class="mt-6">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-      Post Comment
-    </button>
-  </form>
-{% else %}
-  <p class="text-gray-400 mt-6">Please <a href="{% url 'login' %}" class="text-blue-400 hover:underline">login</a> to post a comment.</p>
-{% endif %}
 
+    {% if user.is_authenticated %}
+      <form method="POST" class="mt-6">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Post Comment
+        </button>
+      </form>
+    {% else %}
+      <p class="text-gray-400 mt-6">Please <a href="{% url 'login' %}" class="text-blue-400 hover:underline">login</a> to post a comment.</p>
+    {% endif %}
   </section>
-  
 </main>
 {% endblock %}

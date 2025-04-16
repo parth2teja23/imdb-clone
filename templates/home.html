@@ -41,6 +41,17 @@
               Add to Watchlist
             {% endif %}
           </button>
+
+          {% if movie.trailer_url %}
+            <a 
+              href="{{ movie.trailer_url }}" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="block mt-4 text-yellow-400 hover:underline"
+            >
+              Watch Trailer
+            </a>
+          {% endif %}
         </form>
       </div>
     {% endfor %}

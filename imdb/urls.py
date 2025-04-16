@@ -29,3 +29,4 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
 
 ]
+# handler404 = 'django.views.defaults.page_not_found'
